@@ -26,7 +26,7 @@ type FTPS struct {
 	TLSConfig tls.Config
 }
 
-func (ftps *FTPS) Connect(host string, port int) (err error) {
+func (ftps *FTPS) Connect(host string, port int, isImplicit bool) (err error) {
 
 	ftps.host = host
 
@@ -37,19 +37,28 @@ func (ftps *FTPS) Connect(host string, port int) (err error) {
 
 	ftps.text = textproto.NewConn(ftps.conn)
 
-	_, err = ftps.response(220)
-	if err != nil {
-		return err
-	}
+	if !isImplicit {
+		_, err = ftps.response(220)
+		if err != nil {
+			return err
+		}
 
-	_, err = ftps.request("AUTH TLS", 234)
-	if err != nil {
-		return err
+		_, err = ftps.request("AUTH TLS", 234)
+		if err != nil {
+			return err
+		}
 	}
 
 	ftps.conn = ftps.upgradeConnToTLS(ftps.conn)
 	ftps.text = textproto.NewConn(ftps.conn) // TODO use sync or something similar?
 
+	if isImplicit {
+		_, err = ftps.response(220)
+		if err != nil {
+			return err
+		}
+	}
+	
 	return
 }
 
