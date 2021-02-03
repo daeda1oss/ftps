@@ -101,6 +101,18 @@ func (ftps *FTPS) Login(username, password string) (err error) {
 	return
 }
 
+func (ftps *FTPS) Noop() (err error) {
+
+	ftps.isConnEstablished()
+
+	_, err = ftps.request("NOOP", 200)
+	if err != nil {
+		return err
+	}
+
+	return
+}
+
 func (ftps *FTPS) request(cmd string, expected int) (message string, err error) {
 
 	ftps.isConnEstablished()
