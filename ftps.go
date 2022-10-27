@@ -418,6 +418,17 @@ func (ftps *FTPS) Quit() (err error) {
 	return
 }
 
+func (ftps *FTPS) FakeQuit() (err error) {
+
+	_, err = ftps.request("QUIT", 221)
+	if err != nil {
+		return
+	}
+// 	ftps.conn.Close()
+
+	return
+}
+
 func (ftps *FTPS) openDataConn(port int) (dataConn net.Conn, err error) {
 
 	dataConn, err = net.Dial("tcp", fmt.Sprintf("%s:%d", ftps.host, port))
