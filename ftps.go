@@ -429,6 +429,15 @@ func (ftps *FTPS) FakeQuit() (err error) {
 	return
 }
 
+func (ftps *FTPS) SendEOF() (err error){
+	n, err := ftps.conn.Write(io.EOF)
+	if err != nil {
+		return
+	}
+	fmt.Println("send EOF:", n)
+	return
+}
+
 func (ftps *FTPS) openDataConn(port int) (dataConn net.Conn, err error) {
 
 	dataConn, err = net.Dial("tcp", fmt.Sprintf("%s:%d", ftps.host, port))
