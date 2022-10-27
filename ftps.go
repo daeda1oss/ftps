@@ -429,14 +429,10 @@ func (ftps *FTPS) FakeQuit() (err error) {
 	return
 }
 
-func (ftps *FTPS) SendEOF() (err error){
-	n, err := ftps.conn.Write(io.EOF)
-	if err != nil {
-		return
-	}
-	fmt.Println("send EOF:", n)
-	return
+func (ftps *FTPS) GetConn() *net.Conn {
+	return &(ftps.conn)
 }
+
 
 func (ftps *FTPS) openDataConn(port int) (dataConn net.Conn, err error) {
 
